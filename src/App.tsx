@@ -276,16 +276,23 @@ export function App() {
     }
   };
 
-  const handleCancelActiveTask = async () => {
-    try {
-      if (isTauri) {
-        await cancelActiveTask();
-      } else if (previewEnabled) {
-        await previewController.cancelActiveTask();
-      }
-    } catch (err) {
+  const handleCancelActiveTask = () => {
+    // Libera a UI na hora: o backend pode estar travado num adb sem resposta.
+    setActiveStepId(null);
+    setStep3Status("Tarefa cancelada pelo usuário.");
+    setStep3Error(null);
+
+    const onError = (err: unknown) => {
       const msg = err instanceof Error ? err.message : String(err);
-      appendLog("error", `Erro ao cancelar tarefa: ${msg}`);
+      if (msg !== "PREVIEW_CANCELLED") {
+        appendLog("error", `Erro ao cancelar tarefa: ${msg}`);
+      }
+    };
+
+    if (isTauri) {
+      void cancelActiveTask().catch(onError);
+    } else if (previewEnabled) {
+      void previewController.cancelActiveTask().catch(onError);
     }
   };
 

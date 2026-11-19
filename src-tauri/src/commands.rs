@@ -378,8 +378,9 @@ pub async fn cancel_active_task(
             let _ = cmd.output().await;
         }
         runner::emit_log(&app, "warn", "Tarefa ativa cancelada pelo usuário.");
-        runner::emit_event(&app, SolariEvent::Cancelled);
     }
+    // Sempre avisa a UI: sem pid ativo a etapa ainda precisa sair de "Abrindo checkout...".
+    runner::emit_event(&app, SolariEvent::Cancelled);
     Ok(())
 }
 
