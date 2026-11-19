@@ -1,6 +1,6 @@
 [package]
 name = "solari"
-version = "0.1.0"
+version = "0.1.1"
 description = "Solari — Assistente nativo em Rust + Tauri v2 para automacao Google AI Pro"
 authors = ["Solari"]
 edition = "2021"
